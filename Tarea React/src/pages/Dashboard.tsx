@@ -32,7 +32,15 @@ const Dashboard = () => {
       responseDate: "2024-01-22",
     },
     {
-      id: "2", 
+      id: "2",
+      company: "AI Solutions",
+      position: "Machine Learning Engineer",
+      status: "aceptada",
+      applicationDate: "2024-01-12",
+      responseDate: "2024-01-19",
+    },
+    {
+      id: "3", 
       company: "DataSoft Solutions",
       position: "Analista de Datos",
       status: "rechazada",
@@ -41,27 +49,20 @@ const Dashboard = () => {
       comments: "El perfil no se ajusta completamente a los requerimientos técnicos específicos del puesto."
     },
     {
-      id: "3",
+      id: "4",
       company: "InnovaTech",
       position: "Desarrollador Mobile",
       status: "esperando",
       applicationDate: "2024-01-20",
     },
     {
-      id: "4",
+      id: "5",
       company: "CloudSystems",
       position: "DevOps Junior",
       status: "esperando",
       applicationDate: "2024-01-25",
     },
-    {
-      id: "5",
-      company: "AI Solutions",
-      position: "Machine Learning Engineer",
-      status: "aceptada",
-      applicationDate: "2024-01-12",
-      responseDate: "2024-01-19",
-    }
+
   ]);
 
   const [filteredApplications, setFilteredApplications] = useState(applications);
@@ -139,104 +140,7 @@ const Dashboard = () => {
     <div className="container mx-auto px-4 py-8 max-w-6xl">
       <div className="space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold gradient-text">Dashboard</h1>
-          <p className="text-muted-foreground">Seguimiento de tus postulaciones</p>
-        </div>
-
-        {/* Filters */}
-        <Card className="card-shadow">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Filter className="h-5 w-5" />
-              Filtros y Ordenamiento
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="space-y-2">
-                <Label>Estado</Label>
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="todos">Todos los estados</SelectItem>
-                    <SelectItem value="aceptada">Aceptada</SelectItem>
-                    <SelectItem value="rechazada">Rechazada</SelectItem>
-                    <SelectItem value="esperando">Esperando respuesta</SelectItem>
-                    <SelectItem value="confirmada">Confirmada</SelectItem>
-                    <SelectItem value="declinada">Declinada</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label>Ordenar por</Label>
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="applicationDate">Fecha de Postulación</SelectItem>
-                    <SelectItem value="responseDate">Fecha de Respuesta</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Orden</Label>
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-between"
-                  onClick={toggleSort}
-                >
-                  {sortOrder === "asc" ? "Ascendente" : "Descendente"}
-                  {sortOrder === "asc" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                </Button>
-              </div>
-
-              <div className="space-y-2">
-                <Label>&nbsp;</Label>
-                <Button onClick={handleFilter} className="w-full">
-                  Aplicar Filtros
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="card-shadow">
-            <CardContent className="p-6 text-center">
-              <div className="text-2xl font-bold gradient-text">{applications.length}</div>
-              <p className="text-sm text-muted-foreground">Total Postulaciones</p>
-            </CardContent>
-          </Card>
-          <Card className="card-shadow">
-            <CardContent className="p-6 text-center">
-              <div className="text-2xl font-bold text-success">
-                {applications.filter(app => app.status === "aceptada").length}
-              </div>
-              <p className="text-sm text-muted-foreground">Aceptadas</p>
-            </CardContent>
-          </Card>
-          <Card className="card-shadow">
-            <CardContent className="p-6 text-center">
-              <div className="text-2xl font-bold text-warning">
-                {applications.filter(app => app.status === "esperando").length}
-              </div>
-              <p className="text-sm text-muted-foreground">En Proceso</p>
-            </CardContent>
-          </Card>
-          <Card className="card-shadow">
-            <CardContent className="p-6 text-center">
-              <div className="text-2xl font-bold text-destructive">
-                {applications.filter(app => app.status === "rechazada").length}
-              </div>
-              <p className="text-sm text-muted-foreground">Rechazadas</p>
-            </CardContent>
-          </Card>
+          <h1 className="text-3xl font-bold gradient-text">Postulaciones</h1>
         </div>
 
         {/* Applications List */}

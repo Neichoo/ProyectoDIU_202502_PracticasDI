@@ -28,15 +28,9 @@ const App = () => (
           <div className="min-h-screen bg-background">
             <Navbar />
             <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/perfil" element={<Profile />} />
+              <Route path="/" element={<Dashboard />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/practica" element={<Internship />} />
               <Route path="/ofertas" element={<Offers />} />
-              <Route path="/empresas" element={<Companies />} />
-              <Route path="/estadisticas" element={<Statistics />} />
-              <Route path="/informaciones" element={<Information />} />
-              <Route path="/contacto" element={<Contact />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

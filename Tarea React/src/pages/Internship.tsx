@@ -176,14 +176,6 @@ const Internship = () => {
                   </div>
                 </div>
               </div>
-              <div className="space-y-2">
-                <Button variant="outline" className="w-full">
-                  Enviar Mensaje
-                </Button>
-                <Button variant="outline" className="w-full">
-                  Solicitar Reunión
-                </Button>
-              </div>
             </div>
           </CardContent>
         </Card>

@@ -19,15 +19,8 @@ import {
 import { cn } from "@/lib/utils"
 
 const navItems = [
-  { name: "Inicio", href: "/", icon: Home },
-  { name: "Mi Perfil", href: "/perfil", icon: User },
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Práctica", href: "/practica", icon: Briefcase },
   { name: "Ofertas", href: "/ofertas", icon: Search },
-  { name: "Empresas", href: "/empresas", icon: Building },
-  { name: "Estadísticas", href: "/estadisticas", icon: BarChart3 },
-  { name: "Informaciones", href: "/informaciones", icon: Info },
-  { name: "Contacto", href: "/contacto", icon: Mail },
 ]
 
 export function Navbar() {
@@ -73,10 +66,6 @@ export function Navbar() {
           
           <div className="flex items-center space-x-2 ml-4 pl-4 border-l">
             <ThemeToggle />
-            <Button variant="outline" size="sm" className="text-destructive hover:text-destructive">
-              <LogOut className="h-4 w-4 mr-2" />
-              Salir
-            </Button>
           </div>
         </div>
 
@@ -118,12 +107,6 @@ export function Navbar() {
                 </Button>
               )
             })}
-            <div className="pt-4 border-t">
-              <Button variant="outline" size="sm" className="w-full text-destructive hover:text-destructive">
-                <LogOut className="h-4 w-4 mr-2" />
-                Salir
-              </Button>
-            </div>
           </div>
         </div>
       )}
