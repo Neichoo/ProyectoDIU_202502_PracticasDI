@@ -214,14 +214,14 @@ const Dashboard = () => {
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button variant="outline" size="sm">
-                            Declinar Práctica
+                            Anular Postulación
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
                             <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
                             <AlertDialogDescription>
-                              Esta acción no se puede deshacer. Declinarás permanentemente la práctica en {application.company}.
+                              Esta acción no se puede deshacer. Anularás permanentemente la postulación en {application.company}.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
@@ -236,13 +236,13 @@ const Dashboard = () => {
                                   )
                                 );
                                 toast({
-                                  title: "Práctica declinada",
-                                  description: "Has declinado la práctica con éxito.",
+                                  title: "Postulación anulada",
+                                  description: "Has anulado tu postulación con éxito.",
                                   variant: "destructive",
                                 });
                               }}
                             >
-                              Declinar Práctica
+                              Anular Postulación
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>

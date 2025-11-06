@@ -19,7 +19,7 @@ import {
 import { cn } from "@/lib/utils"
 
 const navItems = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Postulaciones", href: "/", icon: LayoutDashboard },
   { name: "Ofertas", href: "/ofertas", icon: Search },
 ]
 
