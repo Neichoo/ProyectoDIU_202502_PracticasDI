@@ -28,7 +28,7 @@ const App = () => (
           <div className="min-h-screen bg-background">
             <Navbar />
             <Routes>
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/" element={<Offers />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/ofertas" element={<Offers />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

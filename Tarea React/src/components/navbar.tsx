@@ -19,8 +19,8 @@ import {
 import { cn } from "@/lib/utils"
 
 const navItems = [
-  { name: "Postulaciones", href: "/", icon: LayoutDashboard },
-  { name: "Ofertas", href: "/ofertas", icon: Search },
+  { name: "Postulaciones", href: "/Dashboard", icon: LayoutDashboard },
+  { name: "Ofertas", href: "/", icon: Search },
 ]
 
 export function Navbar() {

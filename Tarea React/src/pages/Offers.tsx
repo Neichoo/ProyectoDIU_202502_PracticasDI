@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Filter, MapPin, Clock, Users, Building } from "lucide-react";
+import { Search, MapPin, Clock, Users, Building, SlidersHorizontal, ChevronDown, ChevronRight } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 interface JobOffer {
@@ -28,6 +28,7 @@ interface JobOffer {
 
 const Offers = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({
     area: [],
     region: [],
@@ -45,7 +46,7 @@ const Offers = () => {
       region: "Región Metropolitana",
       modalidad: "Híbrido",
       duracion: "6 meses",
-      horario: "9:00-18:00",
+      horario: "09:00-18:00",
       address: "Av. Vitacura 2939, Torre B, Piso 15, Las Condes, Santiago",
       applicants: 12,
       description: "Desarrollar aplicaciones web utilizando tecnologías modernas como React, Node.js y bases de datos relacionales.",
@@ -53,14 +54,14 @@ const Offers = () => {
     },
     {
       id: "2",
-      company: "DataSoft Solutions", 
+      company: "DataSoft Solutions",
       position: "Analista de Datos",
       area: "Data Science",
       region: "Región de Valparaíso",
       modalidad: "Presencial",
       duracion: "4 meses",
-      horario: "8:00-17:00",
-      address: "Plaza Victoria 1398, Oficina 504, Valparaíso Centro",
+      horario: "08:00-17:00",
+      address: "Calle Condell 1440, Piso 5, Valparaíso",
       applicants: 8,
       description: "Análisis de grandes volúmenes de datos para generar insights de negocio utilizando Python y herramientas de visualización.",
       requirements: ["Python", "SQL", "Power BI", "Estadística"]
@@ -69,12 +70,12 @@ const Offers = () => {
       id: "3",
       company: "CyberSecure Corp",
       position: "Especialista en Ciberseguridad",
-      area: "Ciberseguridad", 
+      area: "Ciberseguridad",
       region: "Región Metropolitana",
       modalidad: "Online",
       duracion: "5 meses",
       horario: "10:00-19:00",
-      address: "Modalidad remota - Sin dirección física",
+      address: "Trabajo 100% remoto desde cualquier región de Chile",
       applicants: 15,
       description: "Implementar y mantener sistemas de seguridad informática, realizar auditorías y análisis de vulnerabilidades.",
       requirements: ["Ethical Hacking", "Redes", "Linux", "Firewall"]
@@ -87,8 +88,8 @@ const Offers = () => {
       region: "Región Metropolitana",
       modalidad: "Presencial",
       duracion: "5 meses",
-      horario: "9:00-18:00",
-      address: "Av. Providencia 1208, Oficina 801, Providencia, Santiago",
+      horario: "09:00-18:00",
+      address: "Av. Providencia 1208, Oficina 701, Providencia, Santiago",
       applicants: 9,
       description: "Desarrollo de aplicaciones móviles nativas para iOS y Android usando React Native y Flutter.",
       requirements: ["React Native", "Flutter", "TypeScript", "Firebase"]
@@ -101,8 +102,8 @@ const Offers = () => {
       region: "Región de Valparaíso",
       modalidad: "Híbrido",
       duracion: "6 meses",
-      horario: "8:00-17:00",
-      address: "Av. Pedro Montt 2055, Edificio Plaza, Piso 8, Valparaíso",
+      horario: "08:00-17:00",
+      address: "Av. Argentina 1230, Torre A, Piso 6, Valparaíso",
       applicants: 6,
       description: "Gestión de infraestructura cloud, automatización de deployments y monitoreo de sistemas distribuidos.",
       requirements: ["AWS", "Docker", "Kubernetes", "Jenkins"]
@@ -116,7 +117,7 @@ const Offers = () => {
       modalidad: "Híbrido",
       duracion: "6 meses",
       horario: "10:00-19:00",
-      address: "Nueva Las Condes 12205, Torre Norte, Piso 22, Las Condes, Santiago",
+      address: "Rosario Norte 555, Torre Titanium, Piso 21, Las Condes, Santiago",
       applicants: 18,
       description: "Desarrollo e implementación de modelos de machine learning para soluciones empresariales.",
       requirements: ["Python", "TensorFlow", "PyTorch", "MLOps"]
@@ -130,7 +131,7 @@ const Offers = () => {
     region: ["Región Metropolitana", "Región de Valparaíso", "Región del Biobío", "Región de la Araucanía"],
     modalidad: ["Presencial", "Online", "Híbrido"],
     duracion: ["3 meses", "4 meses", "5 meses", "6 meses"],
-    horario: ["8:00-17:00", "9:00-18:00", "10:00-19:00", "Flexible"]
+    horario: ["08:00-17:00", "09:00-18:00", "10:00-19:00", "Flexible"]
   };
 
   const handleFilterChange = (category: string, value: string, checked: boolean) => {
@@ -148,19 +149,17 @@ const Offers = () => {
   const applyFilters = () => {
     let filtered = offers;
 
-    // Text search
     if (searchQuery) {
-      filtered = filtered.filter(offer => 
+      filtered = filtered.filter(offer =>
         offer.position.toLowerCase().includes(searchQuery.toLowerCase()) ||
         offer.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
         offer.description.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
-    // Category filters
     Object.entries(selectedFilters).forEach(([category, values]) => {
       if (values.length > 0) {
-        filtered = filtered.filter(offer => 
+        filtered = filtered.filter(offer =>
           values.includes(offer[category as keyof JobOffer] as string)
         );
       }
@@ -204,59 +203,77 @@ const Offers = () => {
               Búsqueda y Filtros
             </CardTitle>
           </CardHeader>
+
           <CardContent className="space-y-4">
             {/* Search Bar */}
-            <div className="flex gap-2">
-              <Input
-                placeholder="Buscar por empresa, puesto o palabras clave..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="flex-1"
-              />
-              <Button onClick={applyFilters}>
-                <Search className="h-4 w-4 mr-2" />
-                Buscar
+            <div className="flex flex-wrap gap-2 justify-between items-center">
+              <div className="flex flex-1 gap-2 min-w-[250px]">
+                <Input
+                  placeholder="Buscar por empresa, puesto o palabras clave..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="flex-1"
+                />
+                <Button onClick={applyFilters}>
+                  <Search className="h-4 w-4 mr-2" />
+                  Buscar
+                </Button>
+              </div>
+
+              <Button
+                variant="outline"
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center gap-2 whitespace-nowrap"
+              >
+                <SlidersHorizontal className="h-4 w-4" />
+                {showFilters ? "Ocultar filtros" : "Mostrar filtros"}
+                {showFilters ? (
+                  <ChevronDown className="h-4 w-4" />
+                ) : (
+                  <ChevronRight className="h-4 w-4" />
+                )}
               </Button>
             </div>
 
-            {/* Filters */}
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-              {Object.entries(filterOptions).map(([category, options]) => (
-                <div key={category} className="space-y-2">
-                  <Label className="font-medium capitalize">
-                    {category === "duracion" ? "Duración" : category}
-                  </Label>
-                  <div className="space-y-2 max-h-32 overflow-y-auto">
-                    {options.map((option) => (
-                      <div key={option} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={`${category}-${option}`}
-                          checked={selectedFilters[category].includes(option)}
-                          onCheckedChange={(checked) => 
-                            handleFilterChange(category, option, checked as boolean)
-                          }
-                        />
-                        <Label 
-                          htmlFor={`${category}-${option}`}
-                          className="text-sm cursor-pointer"
-                        >
-                          {option}
-                        </Label>
+            {/* Filtros con toggle */}
+            {showFilters && (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                  {Object.entries(filterOptions).map(([category, options]) => (
+                    <div key={category} className="space-y-2">
+                      <Label className="font-medium capitalize">
+                        {category === "duracion" ? "Duración" : category}
+                      </Label>
+                      <div className="space-y-2 max-h-32 overflow-y-auto">
+                        {options.map((option) => (
+                          <div key={option} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`${category}-${option}`}
+                              checked={selectedFilters[category].includes(option)}
+                              onCheckedChange={(checked) =>
+                                handleFilterChange(category, option, checked as boolean)
+                              }
+                            />
+                            <Label htmlFor={`${category}-${option}`} className="text-sm cursor-pointer">
+                              {option}
+                            </Label>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
 
-            <div className="flex gap-2">
-              <Button onClick={applyFilters} className="flex-1">
-                Aplicar Filtros
-              </Button>
-              <Button variant="outline" onClick={clearFilters}>
-                Limpiar
-              </Button>
-            </div>
+                <div className="flex gap-2">
+                  <Button onClick={applyFilters} className="flex-1">
+                    Aplicar Filtros
+                  </Button>
+                  <Button variant="outline" onClick={clearFilters}>
+                    Limpiar
+                  </Button>
+                </div>
+              </>
+            )}
           </CardContent>
         </Card>
 
@@ -268,10 +285,10 @@ const Offers = () => {
         </div>
 
         {/* Offers List */}
-        <div className="grid gap-6">
+        <div className="grid gap-3">
           {filteredOffers.map((offer) => (
-            <Card key={offer.id} className="card-shadow">
-              <CardHeader>
+            <Card key={offer.id} className="card-shadow p-0">
+              <CardHeader className="p-3 pb-2">
                 <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                   <div className="space-y-2">
                     <CardTitle className="text-xl">{offer.position}</CardTitle>
@@ -286,10 +303,10 @@ const Offers = () => {
                   </div>
                 </div>
               </CardHeader>
-              
-              <CardContent className="space-y-4">
+
+              <CardContent className="p-3 pt-0 space-y-3">
                 <p className="text-muted-foreground">{offer.description}</p>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                   <div className="flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-primary" />
@@ -298,7 +315,7 @@ const Offers = () => {
                       <p className="text-muted-foreground">{offer.address}</p>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4 text-primary" />
                     <div>
@@ -306,7 +323,7 @@ const Offers = () => {
                       <p className="text-muted-foreground">{offer.horario}</p>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center gap-2">
                     <Users className="h-4 w-4 text-primary" />
                     <div>
@@ -340,7 +357,7 @@ const Offers = () => {
                         Completa el formulario para enviar tu postulación a {offer.company}
                       </DialogDescription>
                     </DialogHeader>
-                    
+
                     <div className="grid gap-4 py-4">
                       <div className="space-y-2">
                         <Label htmlFor="motivation">Carta de Motivación</Label>
@@ -350,7 +367,7 @@ const Offers = () => {
                           className="min-h-[100px]"
                         />
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label htmlFor="experience">Experiencia Relevante</Label>
                         <Textarea
@@ -359,7 +376,7 @@ const Offers = () => {
                           className="min-h-[80px]"
                         />
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label htmlFor="availability">Disponibilidad</Label>
                         <Select>
@@ -374,7 +391,7 @@ const Offers = () => {
                           </SelectContent>
                         </Select>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label htmlFor="portfolio">Portafolio / GitHub</Label>
                         <Input
@@ -387,7 +404,7 @@ const Offers = () => {
                         </p>
                       </div>
                     </div>
-                    
+
                     <Button onClick={() => handleApply(offer.id)} className="w-full">
                       Enviar Postulación
                     </Button>

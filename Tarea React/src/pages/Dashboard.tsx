@@ -1,267 +1,233 @@
 import { useState } from "react";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Calendar, Filter, ChevronDown, ChevronUp } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
-type ApplicationStatus = "aceptada" | "rechazada" | "esperando" | "confirmada" | "declinada";
+type ApplicationStatus = "esperando" | "aceptada" | "rechazada" | "confirmada" | "declinada";
 
 interface Application {
-  id: string;
-  company: string;
+  id: number;
   position: string;
+  company: string;
   status: ApplicationStatus;
   applicationDate: string;
   responseDate?: string;
-  comments?: string;
+  comment?: string;
 }
 
 const Dashboard = () => {
   const [applications, setApplications] = useState<Application[]>([
     {
-      id: "1",
-      company: "TechCorp Chile",
+      id: 1,
       position: "Desarrollador Full Stack",
+      company: "TechCorp Chile",
       status: "aceptada",
-      applicationDate: "2024-01-15",
-      responseDate: "2024-01-22",
+      applicationDate: "14/1/2024",
+      responseDate: "21/1/2024",
     },
     {
-      id: "2",
-      company: "AI Solutions",
+      id: 2,
       position: "Machine Learning Engineer",
+      company: "AI Solutions",
       status: "aceptada",
-      applicationDate: "2024-01-12",
-      responseDate: "2024-01-19",
+      applicationDate: "11/1/2024",
+      responseDate: "18/1/2024",
     },
     {
-      id: "3", 
-      company: "DataSoft Solutions",
+      id: 3,
       position: "Analista de Datos",
+      company: "DataSoft Solutions",
       status: "rechazada",
-      applicationDate: "2024-01-10",
-      responseDate: "2024-01-18",
-      comments: "El perfil no se ajusta completamente a los requerimientos técnicos específicos del puesto."
+      applicationDate: "9/1/2024",
+      responseDate: "17/1/2024",
+      comment:
+        "El perfil no se ajusta completamente a los requerimientos técnicos específicos del puesto.",
     },
     {
-      id: "4",
-      company: "InnovaTech",
+      id: 4,
       position: "Desarrollador Mobile",
+      company: "InnovaTech SpA",
       status: "esperando",
-      applicationDate: "2024-01-20",
+      applicationDate: "10/1/2024",
     },
-    {
-      id: "5",
-      company: "CloudSystems",
-      position: "DevOps Junior",
-      status: "esperando",
-      applicationDate: "2024-01-25",
-    },
-
   ]);
-
-  const [filteredApplications, setFilteredApplications] = useState(applications);
-  const [statusFilter, setStatusFilter] = useState<string>("todos");
-  const [sortBy, setSortBy] = useState<string>("applicationDate");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   const getStatusColor = (status: ApplicationStatus) => {
     switch (status) {
       case "aceptada":
-        return "bg-success text-success-foreground";
+        return "bg-green-600 text-white";
       case "rechazada":
-        return "bg-destructive text-destructive-foreground";
+        return "bg-red-600 text-white";
       case "esperando":
-        return "bg-warning text-warning-foreground";
+        return "bg-yellow-500 text-black";
       case "confirmada":
-        return "bg-primary text-primary-foreground";
+        return "bg-blue-600 text-white";
       case "declinada":
-        return "bg-muted text-muted-foreground";
+        return "bg-red-700 text-white";
       default:
-        return "bg-muted text-muted-foreground";
+        return "bg-gray-500 text-white";
     }
   };
 
-  const getStatusText = (status: ApplicationStatus) => {
-    switch (status) {
-      case "aceptada":
-        return "Aceptada";
-      case "rechazada":
-        return "Rechazada";
-      case "esperando":
-        return "Esperando Respuesta";
-      case "confirmada":
-        return "Práctica Confirmada";
-      case "declinada":
-        return "Práctica Declinada";
-      default:
-        return status;
-    }
-  };
-
-  const handleFilter = () => {
-    let filtered = applications;
-    
-    if (statusFilter !== "todos") {
-      filtered = filtered.filter(app => app.status === statusFilter);
-    }
-
-    // Sort applications
-    filtered = filtered.sort((a, b) => {
-      let aValue, bValue;
-      
-      if (sortBy === "applicationDate") {
-        aValue = new Date(a.applicationDate).getTime();
-        bValue = new Date(b.applicationDate).getTime();
-      } else if (sortBy === "responseDate") {
-        aValue = a.responseDate ? new Date(a.responseDate).getTime() : 0;
-        bValue = b.responseDate ? new Date(b.responseDate).getTime() : 0;
-      } else {
-        return 0;
-      }
-
-      return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
+  const handleConfirm = (application: Application) => {
+    setApplications((apps) =>
+      apps.map((app) =>
+        app.id === application.id ? { ...app, status: "confirmada" } : app
+      )
+    );
+    toast({
+      title: "Práctica confirmada",
+      description: `Has confirmado tu práctica como ${application.position}.`,
     });
-
-    setFilteredApplications(filtered);
   };
 
-  const toggleSort = () => {
-    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-    handleFilter();
+  const handleDecline = (application: Application) => {
+    setApplications((apps) =>
+      apps.map((app) =>
+        app.id === application.id ? { ...app, status: "declinada" } : app
+      )
+    );
+    toast({
+      title: "Postulación anulada",
+      description: `Has anulado tu postulación a ${application.position}.`,
+      variant: "destructive",
+    });
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
+    <div className="container mx-auto px-4 py-8 max-w-5xl">
+      <h1 className="text-3xl font-bold text-center mb-6 gradient-text">
+        Postulaciones
+      </h1>
+
       <div className="space-y-6">
-        <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold gradient-text">Postulaciones</h1>
-        </div>
+        <h2 className="text-xl font-semibold">Mis Postulaciones</h2>
 
-        {/* Applications List */}
-        <div className="space-y-4">
-          <h2 className="text-2xl font-semibold">Mis Postulaciones</h2>
-          
-          {filteredApplications.length === 0 ? (
-            <Card className="card-shadow">
-              <CardContent className="p-8 text-center">
-                <p className="text-muted-foreground">No se encontraron postulaciones con los filtros aplicados.</p>
-              </CardContent>
-            </Card>
-          ) : (
-            filteredApplications.map((application) => (
-              <Card key={application.id} className="card-shadow">
-                <CardHeader>
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                      <CardTitle>{application.position}</CardTitle>
-                      <CardDescription>{application.company}</CardDescription>
-                    </div>
-                    <Badge className={getStatusColor(application.status)}>
-                      {getStatusText(application.status)}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Postulación:</span>
-                      <span>{new Date(application.applicationDate).toLocaleDateString('es-ES')}</span>
-                    </div>
-                    {application.responseDate && (
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-muted-foreground">Respuesta:</span>
-                        <span>{new Date(application.responseDate).toLocaleDateString('es-ES')}</span>
-                      </div>
-                    )}
-                  </div>
-                  
-                  {application.comments && (
-                    <div className="bg-muted p-3 rounded-md">
-                      <p className="text-sm font-medium mb-1">Comentarios:</p>
-                      <p className="text-sm text-muted-foreground">{application.comments}</p>
-                    </div>
-                  )}
+        {applications.map((application) => (
+          <Card
+            key={application.id}
+            className="border border-border bg-white text-black dark:bg-neutral-900 dark:text-white transition-colors"
+          >
+            <CardHeader>
+              <div className="flex flex-col md:flex-row md:justify-between md:items-center">
+                <div className="flex flex-col space-y-1">
+                  <CardTitle className="text-lg font-semibold">
+                    {application.position}
+                  </CardTitle>
+                  <CardDescription className="text-muted-foreground">
+                    {application.company}
+                  </CardDescription>
+                </div>
 
-                  {application.status === "aceptada" && (
-                    <div className="flex gap-2">
-                      <Button 
-                        size="sm" 
-                        className="bg-success hover:bg-success/90"
-                        onClick={() => {
-                          setApplications(apps => 
-                            apps.map(app => 
-                              app.id === application.id 
-                                ? { ...app, status: "confirmada" as ApplicationStatus }
-                                : app
-                            )
-                          );
-                          toast({
-                            title: "Práctica confirmada",
-                            description: "Has confirmado la práctica con éxito. Te contactaremos pronto con más detalles.",
-                          });
-                        }}
-                      >
-                        Confirmar Práctica
-                      </Button>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="outline" size="sm">
-                            Anular Postulación
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Esta acción no se puede deshacer. Anularás permanentemente la postulación en {application.company}.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => {
-                                setApplications(apps => 
-                                  apps.map(app => 
-                                    app.id === application.id 
-                                      ? { ...app, status: "declinada" as ApplicationStatus }
-                                      : app
-                                  )
-                                );
-                                toast({
-                                  title: "Postulación anulada",
-                                  description: "Has anulado tu postulación con éxito.",
-                                  variant: "destructive",
-                                });
-                              }}
-                            >
-                              Anular Postulación
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-                  )}
-                  
-                  {(application.status === "confirmada" || application.status === "declinada") && (
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        Ver Detalles
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))
-          )}
-        </div>
+                <Badge
+                  className={`${getStatusColor(
+                    application.status
+                  )} px-3 py-1 rounded-full text-sm mt-3 md:mt-0`}
+                >
+                  {application.status === "declinada"
+                    ? "Anulada"
+                    : application.status.charAt(0).toUpperCase() +
+                      application.status.slice(1)}
+                </Badge>
+              </div>
+            </CardHeader>
+
+            <CardContent>
+              <div className="flex justify-between text-sm text-muted-foreground mb-3">
+                <div className="flex items-center gap-2">
+                  <CalendarDays className="h-4 w-4" />
+                  <span>
+                    <strong>Postulación:</strong> {application.applicationDate}
+                  </span>
+                </div>
+
+                {application.responseDate && (
+                  <div className="flex items-center gap-2">
+                    <CalendarDays className="h-4 w-4" />
+                    <span>
+                      <strong>Respuesta:</strong> {application.responseDate}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {application.status === "rechazada" && application.comment && (
+                <div className="bg-muted p-3 rounded-md text-sm mb-4">
+                  <p className="font-medium mb-1">Comentarios:</p>
+                  <p className="text-muted-foreground">{application.comment}</p>
+                </div>
+              )}
+
+              {application.status === "aceptada" && (
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    className="bg-green-600 hover:bg-green-700 text-white"
+                    onClick={() => handleConfirm(application)}
+                  >
+                    Confirmar Práctica
+                  </Button>
+
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="destructive">Anular Postulación</Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="bg-white text-black dark:bg-neutral-900 dark:text-white border border-border">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
+                        <AlertDialogDescription className="text-muted-foreground">
+                          Esta acción no se puede deshacer. Tu postulación será
+                          anulada permanentemente.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel className="bg-muted hover:bg-muted/80">
+                          Cancelar
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          className="bg-red-700 hover:bg-red-800 text-white"
+                          onClick={() => handleDecline(application)}
+                        >
+                          Sí, anular
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              )}
+
+              {application.status === "esperando" && (
+                <p className="text-muted-foreground italic">
+                  La empresa aún no responde tu postulación.
+                </p>
+              )}
+
+              {application.status === "confirmada" && (
+                <p className="text-blue-500 italic">
+                  Has confirmado tu práctica. ¡Felicidades!
+                </p>
+              )}
+
+              {application.status === "declinada" && (
+                <p className="text-red-500 italic">
+                  Has anulado tu postulación.
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        ))}
       </div>
     </div>
   );
